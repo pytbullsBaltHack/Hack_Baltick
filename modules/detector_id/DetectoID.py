@@ -8,7 +8,6 @@ import os
 
 workers = 0 if os.name == 'nt' else 4
 
-
 """
 @author Alexey_B
 @brief Class for calculate ID
@@ -29,6 +28,14 @@ class DetectorId(object):
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
         self.model = InceptionResnetV1(pretrained='vggface2').eval().to(self.device)
 
+    def prepare_data(self, frame, rois):
+        return frame
+
+    def post_data(self, embeddings):
+        faseId = FaceId(embeddings)
+        ids = list()
+        ids.append(faseId)
+        return ids
 
     # frame: cv2::Mat
     def predict(self, frame, rois):
