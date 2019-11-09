@@ -10,6 +10,7 @@ from . utils.utils import *
 
 
 class FaceRect(object):
+    id = 0
     x = 0
     y = 0
     w = 0

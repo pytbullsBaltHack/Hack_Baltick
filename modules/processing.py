@@ -21,9 +21,9 @@ class Processing(object):
     statistics = Statistic
     frameid = 0
     
-    def __init__(self):
+    def __init__(self,cfg):
         self.frameid = 0
-        self.facedetector = DetectorFace({})
+        self.facedetector = DetectorFace(cfg.facedet)
         self.iddetector = DetectorId({})
         self.idbase = FaceIdBase()
         self.statistic = Statistic()
