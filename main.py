@@ -27,7 +27,7 @@ def main():
     stream = getStream(cfg)
     
     # Объект, где происходит обработка кадра: детект лиц, трекинг, идентификация
-    processing = Processing()
+    processing = Processing(cfg)
     
     if (stream.isOpened()== False): 
         print("Error opening video stream or file")

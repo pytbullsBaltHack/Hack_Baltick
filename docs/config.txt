@@ -1,3 +1,12 @@
 Конфигурация задаётся через файл config.ini из каталога config:
 [test]
-filename=C:\Projects\BalticSea\camtemp.mp4
+filename=C:\Projects\BalticSea\test2.mp4
+
+[facedet]
+cfg=C:\Projects\BalticSea\data\yolov3-face.cfg
+weights=C:\Projects\BalticSea\data\yolov3-wider_16000.weights
+classes_names=C:\Projects\BalticSea\data\face.names
+img_size=416
+conf_thres = 0.2
+nms_thres = 0.1
+device=0

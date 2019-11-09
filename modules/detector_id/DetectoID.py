@@ -2,6 +2,7 @@ from facenet_pytorch import MTCNN, InceptionResnetV1
 import torch
 import cv2
 import os
+import math
 from PIL import Image, ImageDraw
 import random
 
@@ -63,7 +64,7 @@ class DetectorId(object):
         #     ids.append(FaceId(id))
 
         for roi in rois:
-            print("Size: {0}x{1}".format(roi.w, roi.h))
+            #print("Size: {0}x{1}".format(roi.w, roi.h))
             if (roi.w > 39) & (roi.h > 39):
                 ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w])
                 if torch.cuda.is_available():
@@ -78,6 +79,7 @@ class DetectorId(object):
                 else:
                     cropped = self.mtcnn(ROI).unsqueeze(0)
                     id = self.resnet(cropped)
+<<<<<<< HEAD
 
 
                 # # cropped = self.mtcnn(ROI).unsqueeze(0)
@@ -89,7 +91,9 @@ class DetectorId(object):
                 # temp = torch.stack(aligned).to(self.device)
                 # id = self.resnet(temp).detach().cpu()
 
+=======
+>>>>>>> 9ab329614b8bd9986adcbe7211731ef59bb914d5
             else:
-                id = []
-            ids.append(FaceId(id))
+                id = [[]]
+            ids.append(FaceId(id[0]))
         return ids

@@ -1,6 +1,7 @@
 import cv2
 import numpy
 import math
+import os
 
 # https://github.com/ageitgey/face_recognition/issues/43
 
@@ -8,12 +9,12 @@ from modules.debug import debugFrame
 from modules.idbase import FaceIdBase
 from modules.statistics import Statistic
 
-
 #from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
 #from modules.test.detectorid_facenet import DetectorId, FaceId
 from modules.detector_id.DetectoID import DetectorId, FaceId
 from modules.Detector_Face.Detector_Face import DetectorFace
 
+<<<<<<< HEAD
 video_file = '/media/vladimir/WORK/data/camtemp.mp4'
 cfg = '/media/vladimir/WORK/Pretrain_Models/YOLO_face/model-weights/cfg/yolov3-face.cfg'
 weights = "/media/vladimir/WORK/Pretrain_Models/YOLO_face/model-weights/yolov3-wider_16000.weights"
@@ -34,14 +35,23 @@ Detector_Face_params['classes_names'] = classes_names
 
 
 
+=======
+>>>>>>> 9ab329614b8bd9986adcbe7211731ef59bb914d5
 class Processing(object):
     facedetector = False
     iddetector = False
     idbase = False
     statistics = Statistic
+    frameid = 0
     
+<<<<<<< HEAD
     def __init__(self):
         self.facedetector = DetectorFace(Detector_Face_params)
+=======
+    def __init__(self,cfg):
+        self.frameid = 0
+        self.facedetector = DetectorFace(cfg.facedet)
+>>>>>>> 9ab329614b8bd9986adcbe7211731ef59bb914d5
         self.iddetector = DetectorId({})
         self.idbase = FaceIdBase()
         self.statistic = Statistic()
@@ -64,9 +74,23 @@ class Processing(object):
     def detectId(self,frame,rects):
         return self.iddetector.predict(frame,rects)
 
+    def saveCache(self,frameid,data):
+        numpy.save('config/cache/{0}.npy'.format(frameid), data)
+        return
+        
+    def loadCache(self,frameid):
+        fn = 'config/cache/{0}.npy'.format(frameid)
+        if(os.path.isfile(fn)):
+            return numpy.load(fn, allow_pickle=True), True
+        else:
+            return False, False
+
     # Находим лица и определяем их ID:
     # возвращаем список объектов {"rect" : rect, "id": id}
     def detectAll(self,frame):
+        cached, ret = self.loadCache(self.frameid)
+        if(ret == True): return cached
+    
         faces = self.detectFaces(frame)
         ids = self.detectId(frame, faces)
 
@@ -87,10 +111,13 @@ class Processing(object):
         #         # todo add mat roi
         #         all.append({"rect" : rect, "id": id})
         
+        self.saveCache(self.frameid,all)
+    
         return all
         
     def processFrame(self,frame):
         all = self.detectAll(frame)
+<<<<<<< HEAD
 
         for id_all in all:
             f = id_all["rect"]
@@ -114,6 +141,22 @@ class Processing(object):
         #             if(isnew):
         #                 self.idbase.addtobase(id)
         #                 self.statistic.increment()
+=======
+        self.frameid = self.frameid + 1
+        
+        count = len(all)
+        if(count > 0):
+            for i in (0, count - 1):
+                f = all[i]["rect"]
+                id = all[i]["id"]
+            
+                if(id.valid()):
+                    print("valid vector: {0}\n".format(len(id.id)))
+                    isnew = self.idbase.checkid(id)
+                    if(isnew):
+                        self.idbase.addtobase(id)
+                        self.statistic.increment()
+>>>>>>> 9ab329614b8bd9986adcbe7211731ef59bb914d5
                 
         self.debugStatisticModule(frame,all)
         return
@@ -143,6 +186,10 @@ class Processing(object):
         color = (0, 255, 0)
         text = "{0}".format(self.statistic.count)
         cv2.putText(drawframe, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+        
+        color = (255, 0, 0)
+        text = "{0}".format(self.frameid)
+        cv2.putText(drawframe, text, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
         
         debugFrame(drawframe)
         
