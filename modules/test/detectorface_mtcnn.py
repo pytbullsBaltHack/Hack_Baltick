@@ -19,6 +19,9 @@ class FaceRect(object):
         self.id = id
         return
         
+    def rect(self):
+        return (self.x,self.y,self.w,self.h)
+        
 class DetectorFace(object):
     frame = 0
     mtcnn = False

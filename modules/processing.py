@@ -68,11 +68,13 @@ class Processing(object):
                 f = all[i]["rect"]
                 id = all[i]["id"]
             
-                isnew = self.idbase.checkid(id)
-                if(isnew):
-                    self.idbase.addtobase(id)
-                    self.statistic.increment()
-            
+                if(id.valid()):
+                    print("valid vector: {0}\n".format(len(id.id)))
+                    isnew = self.idbase.checkid(id)
+                    if(isnew):
+                        self.idbase.addtobase(id)
+                        self.statistic.increment()
+                
         self.debugStatisticModule(frame,all)
         return
 
@@ -117,15 +119,18 @@ class Processing(object):
             for i in (0, count - 1):
                 f = all[i]["rect"]
                 id = all[i]["id"]
-                dist = baseid.calcDistance(id)
-                
-                if(dist < 0.2):
-                    color = (0, 255, 0)
-                elif (dist < 0.4):
-                    color = (0, 255, 255)
+                if(id.valid()):
+                    dist = baseid.calcDistance(id)
+                    
+                    if(dist < 0.2):
+                        color = (0, 255, 0)
+                    elif (dist < 0.4):
+                        color = (0, 255, 255)
+                    else:
+                        color = (0, 0, 255)
                 else:
-                    color = (0, 0, 255)
-                
+                    color = (255, 0, 0)
+                    
                 cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
                 
                 text = "{0:.2f}".format(dist)
