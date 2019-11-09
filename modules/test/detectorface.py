@@ -26,6 +26,9 @@ class DetectorFace(object):
     def isInRange(self,ffrom,fto):
         return ((self.frame >= ffrom) & (self.frame <= fto))
     
+    def __call__(self, frame):
+        return self.predict(frame)
+        
     # frame: cv2::Mat
     def predict(self,frame):
         rects = []
