@@ -1,6 +1,7 @@
 import cv2
 import numpy
 import math
+import os
 
 # https://github.com/ageitgey/face_recognition/issues/43
 
@@ -8,10 +9,10 @@ from modules.debug import debugFrame
 from modules.idbase import FaceIdBase
 from modules.statistics import Statistic
 
-from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
+#from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
 #from modules.test.detectorid_facenet import DetectorId, FaceId
 from modules.detector_id.DetectoID import DetectorId, FaceId
-#from modules.Detector_Face.Detector_Face import DetectorFace
+from modules.Detector_Face.Detector_Face import DetectorFace
 
 class Processing(object):
     facedetector = False
@@ -45,9 +46,23 @@ class Processing(object):
     def detectId(self,frame,rects):
         return self.iddetector.predict(frame,rects)
 
+    def saveCache(self,frameid,data):
+        numpy.save('config/cache/{0}.npy'.format(frameid), data)
+        return
+        
+    def loadCache(self,frameid):
+        fn = 'config/cache/{0}.npy'.format(frameid)
+        if(os.path.isfile(fn)):
+            return numpy.load(fn, allow_pickle=True), True
+        else:
+            return False, False
+
     # Находим лица и определяем их ID:
     # возвращаем список объектов {"rect" : rect, "id": id}
     def detectAll(self,frame):
+        cached, ret = self.loadCache(self.frameid)
+        if(ret == True): return cached
+    
         faces = self.detectFaces(frame)
         ids = self.detectId(frame, faces)
         
@@ -61,6 +76,8 @@ class Processing(object):
                 # todo add mat roi
                 all.append({"rect" : rect, "id": id})
         
+        self.saveCache(self.frameid,all)
+    
         return all
         
     def processFrame(self,frame):
