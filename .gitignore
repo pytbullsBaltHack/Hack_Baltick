@@ -2,3 +2,8 @@
 config/data/
 modules/__pycache__
 modules/test/__pycache__
+server/.idea
+server/venv
+server/FaceSmartCity/__pycache__
+server/users/__pycache__
+server/webface/__pycache__

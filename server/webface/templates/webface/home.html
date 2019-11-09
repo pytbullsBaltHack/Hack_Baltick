@@ -1,0 +1,15 @@
+{% extends "webface/base.html" %}
+{% block content %}
+    {% for src in sources %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">User: {{ src.user }}</a>
+              <small class="text-muted">{{ src.date|date:"D d M Y" }} {{ src.date|time:"H:i:s" }}</small>
+            </div>
+            <h2><a class="article-title" href="#">Source: {{ src.camera_source }}</a></h2>
+            <p class="article-content">Is run: {{ src.is_run }}</p>
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
