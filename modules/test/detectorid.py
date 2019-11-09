@@ -1,5 +1,6 @@
 import numpy
 import random
+import math
 
 class FaceId(object):
     id = []
@@ -14,6 +15,13 @@ class FaceId(object):
     def save(self, filename):
         numpy.save(filename, self.id)
     
+    # Расчёт расстояния между двумя векторами FaceId
+    def calcDistance(self,id):
+        sum = 0
+        for i in (0, len(id.id) - 1):
+            sum = sum + math.pow(id.id[i] - self.id[i], 2)
+        return math.sqrt(sum)
+
 class DetectorId(object):
     index = 0
     

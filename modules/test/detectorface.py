@@ -15,15 +15,28 @@ class FaceRect(object):
         return
         
 class DetectorFace(object):
-
+    frame = 0
+    
     def __init__(self):
+        self.frame = 0
+        
         # Инициализация детектора...
         return
+    
+    def isInRange(self,ffrom,fto):
+        return ((self.frame >= ffrom) & (self.frame <= fto))
     
     # frame: cv2::Mat
     def predict(self,frame):
         rects = []
-        rects.append(FaceRect(10, 10, 40, 40, 1))
-        rects.append(FaceRect(80, 140, 60, 80, 2))
+        
+        if self.isInRange(1,30): rects.append(FaceRect(120, 200, 40, 40, 1))
+        if self.isInRange(20,50):rects.append(FaceRect(10, 140, 60, 80, 2))
+        if self.isInRange(40,80):rects.append(FaceRect(210, 10, 250, 180, 3))
+        if self.isInRange(88,98): rects.append(FaceRect(120, 200, 40, 40, 1))
+        
+        if self.isInRange(120,190): rects.append(FaceRect(120+self.frame-120, 200, 40, 40, 4))
+        
+        self.frame = self.frame + 1
         
         return rects

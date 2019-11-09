@@ -37,8 +37,9 @@ def main():
     while(stream.isOpened()):
         ret, frame = stream.read()
         if ret == True:
-            processing.debugDetectorId(frame, 2)
-        
+            #processing.debugDetectorId(frame, 2)
+            processing.processFrame(frame)
+            
             # Press Q on keyboard to  exit
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
