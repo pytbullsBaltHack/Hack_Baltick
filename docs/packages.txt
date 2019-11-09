@@ -1,2 +1,4 @@
-opencv-python
-pytorch==1.0.1
+opencv-python   [pip]
+facenet-pytorch [pip]
+pytorch==1.0.1  [conda]
+torchvision     [pip]

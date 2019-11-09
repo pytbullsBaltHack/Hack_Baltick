@@ -2,12 +2,14 @@ import cv2
 import numpy
 import math
 
+# https://github.com/ageitgey/face_recognition/issues/43
+
 from modules.debug import debugFrame
 from modules.idbase import FaceIdBase
 from modules.statistics import Statistic
 
-from modules.test.detectorface import DetectorFace, FaceRect
-from modules.test.detectorid import DetectorId, FaceId
+from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
+from modules.test.detectorid_facenet import DetectorId, FaceId
 
 class Processing(object):
     facedetector = False
