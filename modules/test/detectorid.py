@@ -1,9 +1,18 @@
+import numpy
+import random
+
 class FaceId(object):
     id = []
 
     def __init__(self, id):
         self.id = id
         return
+    
+    def load(self, filename):
+        self.id = numpy.load(filename)
+    
+    def save(self, filename):
+        numpy.save(filename, self.id)
     
 class DetectorId(object):
     index = 0
@@ -13,19 +22,28 @@ class DetectorId(object):
         # Инициализация детектора...
         return
     
-    def generateId(self, randv):
+    def generateRandId(self):
         id = []
         for i in (0, 49):
-            id.append(i)
-        id[0] = randv
-        return id
+            id.append(random.randint(0, 1000) / 1000.0)
+        return FaceId(id)
+        
+    def generateId(self, id):
+        fid = FaceId(0)
+        fid.load('config/data/{0}.npy'.format(id))
+        
+        return fid
     
     # frame: cv2::Mat
     def predict(self,frame,rois):
         ids = []
         self.index = self.index + 1
         for roi in rois:
-            id = self.generateId(self.index)
+            if(roi.id == 0):
+                id = self.generateRandId()
+            else:
+                id = self.generateId(roi.id)
+            
             ids.append(id)
             
         return ids

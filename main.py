@@ -37,7 +37,7 @@ def main():
     while(stream.isOpened()):
         ret, frame = stream.read()
         if ret == True:
-            processing.debugDetector(frame)
+            processing.debugDetectorId(frame, 2)
         
             # Press Q on keyboard to  exit
             if cv2.waitKey(25) & 0xFF == ord('q'):
@@ -46,7 +46,6 @@ def main():
         # Break the loop
         else: 
             break
-            
-     
+    
 # Точка входа     
 main()

@@ -1,1 +1,4 @@
 .idea
+config/data/
+modules/__pycache__
+modules/test/__pycache__
