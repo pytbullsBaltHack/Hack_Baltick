@@ -8,6 +8,9 @@ class FaceIdBase(object):
     # список id
     idlist = []
     
+    # список известных посетителей
+    visitors = []
+    
     # База данных
     database = False
     
@@ -22,9 +25,10 @@ class FaceIdBase(object):
     # TODO: обеспечить выгрузку в базу старых лиц
     
     def __init__(self):
-        idlist = []
-        database = Database("server/id.sqlite3")
-        similardist = 0.2
+        self.idlist = []
+        self.visitors = []
+        self.database = Database("server/db.sqlite3")
+        self.similardist = 0.07
         return
     
     # Попробуем найти похожие id в базе, возвращаем индексы похожих
@@ -49,5 +53,8 @@ class FaceIdBase(object):
     # Добавить FaceId в базу   
     def addtobase(self,id):
         self.idlist.append(id)
+        
+        self.database.PushUserId(id)
+        self.database.PushVisitor(id,0,0)
         
         return

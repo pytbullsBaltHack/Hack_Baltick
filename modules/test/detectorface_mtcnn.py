@@ -12,10 +12,11 @@ class FaceRect(object):
     id = 0
     
     def __init__(self, x, y, w, h, id):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
+        self.x = x if (x > 0) else 0
+        self.y = y if (y > 0) else 0
+        self.w = w if (w > 0) else 0
+        self.h = h if (h > 0) else 0
+
         self.id = id
         return
         
@@ -47,7 +48,8 @@ class DetectorFace(object):
     def predict(self,frame):
         rects = []
         boxes, _ = self.mtcnn.detect(self.opencvtopil(frame))
-        for b in boxes:
-            rects.append(FaceRect(int(b[0]), int(b[1]), int(b[2] - b[0]), int(b[3] - b[1]), 0))
+        if(boxes is not None):
+            for b in boxes:
+                rects.append(FaceRect(int(b[0]), int(b[1]), int(b[2] - b[0]), int(b[3] - b[1]), 0))
 
         return rects

@@ -17,10 +17,10 @@ class FaceRect(object):
     h = 0
 
     def __init__(self, x, y, w, h):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
+        self.x = x if (x > 0) else 0
+        self.y = y if (y > 0) else 0
+        self.w = w if (w > 0) else 0
+        self.h = h if (h > 0) else 0
 
     def rect(self):
         return (self.x,self.y,self.w,self.h)

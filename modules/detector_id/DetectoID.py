@@ -29,7 +29,10 @@ class FaceId(object):
         return math.sqrt(sum)
     def valid(self):
         return len(self.id) > 10;
-
+    def tostring(self):
+        stra  = ["{0:0.6}".format(float(x)) for x in self.id]
+        ret = ','.join(stra)
+        return ret
 class DetectorId(object):
 
     def __init__(self, param):
@@ -59,7 +62,7 @@ class DetectorId(object):
         ids = []
 
         for roi in rois:
-            #print("Size: {0}x{1}".format(roi.w, roi.h))
+            print("Size: {0}x{1} {2},{3}".format(roi.w, roi.h, roi.x, roi.y))
             if (roi.w > 39) & (roi.h > 39):
                 ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w]);
 
@@ -70,8 +73,11 @@ class DetectorId(object):
                     temp = torch.stack(aligned).to(self.device)
                     id = self.resnet(temp).detach().cpu()
                 else:
-                    cropped = self.mtcnn(ROI).unsqueeze(0)
-                    id = self.resnet(cropped)
+                    cropped = self.mtcnn(ROI)
+                    if(cropped is not None):
+                        id = self.resnet(cropped.unsqueeze(0))
+                    else:
+                        id = [[]]
             else:
                 id = [[]]
             ids.append(FaceId(id[0]))
