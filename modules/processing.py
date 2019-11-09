@@ -8,9 +8,10 @@ from modules.debug import debugFrame
 from modules.idbase import FaceIdBase
 from modules.statistics import Statistic
 
-from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
+# from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
 #from modules.test.detectorid_facenet import DetectorId, FaceId
 from modules.detector_id.DetectoID import DetectorId, FaceId
+from modules.Detector_Face.Detector_Face import DetectorFace, FaceRect
 
 class Processing(object):
     facedetector = False

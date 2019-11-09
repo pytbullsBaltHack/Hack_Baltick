@@ -28,11 +28,13 @@ class DetectorFace:
         self.weights = param['weights']
         self.classes_names =param['classes_names']
         self.img_size = param['img_size']
-        self.device = torch_utils.select_device(param['device'])
+        self.device = torch_utils.select_device(param['device'] if torch.cuda.is_available() else 'cpu')
         self.conf_thres = param['conf_thres']
         self.nms_thres =param['nms_thres']
 
-        self.model = Darknet(self.cfg, self.img_size).cuda()
+        self.model = Darknet(self.cfg, self.img_size)
+        if torch.cuda.is_available():
+            self.model.cuda()
         if self.weights.endswith('.pt'):  # pytorch format
             self.model.load_state_dict(torch.load(self.weights, map_location=self.device)['model'])
         else:  # darknet format
@@ -56,7 +58,7 @@ class DetectorFace:
 
         if img.ndimension() == 3:
             img = img.unsqueeze(0)
-        # ****processing frame*****
+        #****processing frame*****
 
         #
         pred = self.model(img)[0]
@@ -67,7 +69,6 @@ class DetectorFace:
         rects = []
         for xyxy in boxes:
             # plot_one_box(xyxy, frame, label='face', color=[0,0,0])
-
-            rects.append(FaceRect(xyxy[0],xyxy[1],xyxy[2]-xyxy[0], xyxy[3]-xyxy[2]))
+            rects.append(FaceRect(xyxy[0],xyxy[1],xyxy[2]-xyxy[0], xyxy[3]-xyxy[1]))
         # return rects, frame
-        return rects, frame
+        return rects

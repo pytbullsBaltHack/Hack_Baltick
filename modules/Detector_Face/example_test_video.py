@@ -36,7 +36,6 @@ param['classes_names'] = classes_names
 
 
 model = None
-
 device = torch_utils.select_device(param['device'])
 
 

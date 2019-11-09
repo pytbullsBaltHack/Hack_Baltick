@@ -7,3 +7,6 @@ server/venv
 server/FaceSmartCity/__pycache__
 server/users/__pycache__
 server/webface/__pycache__
+modules/Detector_Face/__pycache__
+modules/Detector_Face/utils/__pycache__
+
