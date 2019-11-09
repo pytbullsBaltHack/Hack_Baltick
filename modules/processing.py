@@ -14,8 +14,23 @@ from modules.statistics import Statistic
 from modules.detector_id.DetectoID import DetectorId, FaceId
 from modules.Detector_Face.Detector_Face import DetectorFace
 
+video_file = '/media/vladimir/WORK/data/camtemp.mp4'
+cfg = '/media/vladimir/WORK/Pretrain_Models/YOLO_face/model-weights/cfg/yolov3-face.cfg'
+weights = "/media/vladimir/WORK/Pretrain_Models/YOLO_face/model-weights/yolov3-wider_16000.weights"
+classes_names = '/media/vladimir/WORK/Pretrain_Models/YOLO_face/model-weights/cfg/face.names'
+img_size = 416
+conf_thres = 0.2
+nms_thres = 0.1
+device = '0'
 
-
+Detector_Face_params = {}
+Detector_Face_params['cfg'] = cfg
+Detector_Face_params['weights'] = weights
+Detector_Face_params['img_size'] = img_size
+Detector_Face_params['conf_thres'] = conf_thres
+Detector_Face_params['nms_thres'] = nms_thres
+Detector_Face_params['device'] = device
+Detector_Face_params['classes_names'] = classes_names
 
 
 
@@ -26,7 +41,7 @@ class Processing(object):
     statistics = Statistic
     
     def __init__(self):
-        self.facedetector = DetectorFace({})
+        self.facedetector = DetectorFace(Detector_Face_params)
         self.iddetector = DetectorId({})
         self.idbase = FaceIdBase()
         self.statistic = Statistic()
@@ -54,49 +69,75 @@ class Processing(object):
     def detectAll(self,frame):
         faces = self.detectFaces(frame)
         ids = self.detectId(frame, faces)
-        
+
         all = []
-        count = len(faces)
-        if(count > 0):
-            for i in (0, count - 1):
-                rect = faces[i]
-                id = ids[i]
-            
-                # todo add mat roi
-                all.append({"rect" : rect, "id": id})
+
+        for id_faces, id_ids in zip (faces, ids):
+            all.append({"rect" : id_faces, "id": id_ids})
+
+        print(len(all))
+        #
+        # count = len(faces)
+        #
+        # if(count > 0):
+        #     for i in (0, count - 1):
+        #         rect = faces[i]
+        #         id = ids[i]
+        #
+        #         # todo add mat roi
+        #         all.append({"rect" : rect, "id": id})
         
         return all
         
     def processFrame(self,frame):
         all = self.detectAll(frame)
-        
-        count = len(all)
-        if(count > 0):
-            for i in (0, count - 1):
-                f = all[i]["rect"]
-                id = all[i]["id"]
-            
-                if(id.valid()):
-                    print("valid vector: {0}\n".format(len(id.id)))
-                    isnew = self.idbase.checkid(id)
-                    if(isnew):
-                        self.idbase.addtobase(id)
-                        self.statistic.increment()
+
+        for id_all in all:
+            f = id_all["rect"]
+            id = id_all["id"]
+            if (id.valid()):
+                print("valid vector: {0}\n".format(len(id.id)))
+                isnew = self.idbase.checkid(id)
+                if (isnew):
+                    self.idbase.addtobase(id)
+                    self.statistic.increment()
+        # count = len(all)
+        # if(count > 0):
+        #     for i in (0, count - 1):
+        #         f = all[i]["rect"]
+        #         id = all[i]["id"]
+        #
+        #
+        #         if(id.valid()):
+        #             print("valid vector: {0}\n".format(len(id.id)))
+        #             isnew = self.idbase.checkid(id)
+        #             if(isnew):
+        #                 self.idbase.addtobase(id)
+        #                 self.statistic.increment()
                 
         self.debugStatisticModule(frame,all)
         return
 
     def debugStatisticModule(self, frame, all):
         drawframe = frame.copy()
-        
-        count = len(all)
-        if(count > 0):
-            for i in (0, count - 1):
-                f = all[i]["rect"]
-                color = (0, 255, 0)
-                text = "{0}".format(f.id)
-                cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
-                cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
+
+        color = (0, 255, 0)
+        for id_all in all:
+            f = id_all['rect']
+            text = "{0}".format(id_all['id'].id)
+            cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+            cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
+
+
+        # count = len(all)
+        # if(count > 0):
+        #     for i in (0, count - 1):
+        #         f = all[i]["rect"]
+        #         color = (0, 255, 0)
+        #         # text = "{0}".format(f.id)
+        #         text=''
+        #         cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+        #         cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
                 
         
         color = (0, 255, 0)

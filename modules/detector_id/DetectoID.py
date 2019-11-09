@@ -33,7 +33,7 @@ class DetectorId(object):
 
     def __init__(self, param):
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-        #self.device = torch.device('cpu')
+        # self.device = torch.device('cpu')
         self.mtcnn = MTCNN(image_size=160, device = self.device)
         self.resnet = InceptionResnetV1(pretrained='vggface2').eval().to(self.device)
 
@@ -57,20 +57,29 @@ class DetectorId(object):
     def predict(self, frame, rois):
         ids = []
 
+
+        # for roi in rois:
+        #     id = []
+        #     ids.append(FaceId(id))
+
         for roi in rois:
             print("Size: {0}x{1}".format(roi.w, roi.h))
             if (roi.w > 39) & (roi.h > 39):
-                ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w]);
-
+                ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w])
                 if torch.cuda.is_available():
-                    cropped = self.mtcnn(ROI)
-                    aligned = []
-                    aligned.append(cropped)
-                    temp = torch.stack(aligned).to(self.device)
-                    id = self.resnet(temp).detach().cpu()
+                    try:
+                        cropped = self.mtcnn(ROI)
+                        aligned = []
+                        aligned.append(cropped)
+                        temp = torch.stack(aligned).to(self.device)
+                        id = self.resnet(temp).detach().cpu()
+                    except:
+                        id = []
                 else:
                     cropped = self.mtcnn(ROI).unsqueeze(0)
                     id = self.resnet(cropped)
+
+
                 # # cropped = self.mtcnn(ROI).unsqueeze(0)
                 # cropped = self.mtcnn(ROI)
                 # aligned = []
@@ -79,7 +88,7 @@ class DetectorId(object):
                 # # id = self.resnet(cropped)
                 # temp = torch.stack(aligned).to(self.device)
                 # id = self.resnet(temp).detach().cpu()
-                print(id)
+
             else:
                 id = []
             ids.append(FaceId(id))
