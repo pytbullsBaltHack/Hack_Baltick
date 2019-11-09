@@ -1,7 +1,7 @@
 import torch.nn.functional as F
 
-from utils.parse_config import *
-from utils.utils import *
+from . parse_config import *
+from . utils import *
 
 ONNX_EXPORT = False
 

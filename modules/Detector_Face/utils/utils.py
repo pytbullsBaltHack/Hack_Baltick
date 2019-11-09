@@ -11,7 +11,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-from utils.datasets import *
+from . datasets import *
 
 from . import torch_utils  # , google_utils
 

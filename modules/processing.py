@@ -8,17 +8,16 @@ from modules.debug import debugFrame
 from modules.idbase import FaceIdBase
 from modules.statistics import Statistic
 
-<<<<<<< HEAD
-# from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
-#from modules.test.detectorid_facenet import DetectorId, FaceId
-from modules.detector_id.DetectoID import DetectorId, FaceId
-from modules.Detector_Face.Detector_Face import DetectorFace, FaceRect
-=======
+
 #from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
 #from modules.test.detectorid_facenet import DetectorId, FaceId
 from modules.detector_id.DetectoID import DetectorId, FaceId
-from modules.Detector_Face.Detector_Face import DetectorId, FaceId
->>>>>>> 84d50068866ff3120541edd3ec3b15bd4f544b2b
+from modules.Detector_Face.Detector_Face import DetectorFace
+
+
+
+
+
 
 class Processing(object):
     facedetector = False
@@ -27,7 +26,7 @@ class Processing(object):
     statistics = Statistic
     
     def __init__(self):
-        self.facedetector = DetectorFace()
+        self.facedetector = DetectorFace({})
         self.iddetector = DetectorId({})
         self.idbase = FaceIdBase()
         self.statistic = Statistic()

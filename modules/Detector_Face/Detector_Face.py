@@ -2,9 +2,11 @@ import cv2
 from sys import platform
 from os import system
 import gc
-from utils.models import *
-from utils.datasets import *
-from utils.utils import *
+
+
+from . utils.models import *
+from . utils.datasets import *
+from . utils.utils import *
 
 
 class FaceRect(object):
