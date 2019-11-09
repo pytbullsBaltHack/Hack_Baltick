@@ -21,5 +21,6 @@ class DetectorFace(object):
     def predict(self,frame):
         rects = []
         rects.append(FaceRect(10, 10, 40, 40))
+        rects.append(FaceRect(80, 140, 60, 80))
         
         return rects
