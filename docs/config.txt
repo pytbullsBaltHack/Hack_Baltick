@@ -1,0 +1,3 @@
+Конфигурация задаётся через файл config.ini из каталога config:
+[test]
+filename=C:\Projects\BalticSea\camtemp.mp4
