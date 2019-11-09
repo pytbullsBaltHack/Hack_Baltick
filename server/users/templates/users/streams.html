@@ -26,11 +26,13 @@
 {#                    <div class="form-group">#}
 {#                        <label>Add Source</label>#}
 {#                        <input name="new-source" type="text" class="form-control" placeholder="Add Source" value="">#}
-{#                        <input name="add-btn2" class="btn btn-outline-info" type="submit" value="Add"/>#}
+{#                        <div class="form-group">#}
+{#                            <a class="btn btn-outline-info mb-2" href="/add_stream?source=" >Add</a>#}
+{#                        </div>#}
 {#                    </div>#}
                     {{ s_form|crispy }}
                     <div class="form-group">
-                        <button name="add-btn" class="btn btn-outline-info" type="submit">Add</button>
+                        <button  name="add-btn" class="btn btn-outline-info" type="submit">Add</button>
                     </div>
                 </form>
 {#                <form method="GET" enctype="multipart/form-data" action="{% url 'streams' %}">#}

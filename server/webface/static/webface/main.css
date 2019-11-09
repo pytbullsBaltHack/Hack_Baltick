@@ -1,6 +1,11 @@
 body {
-  background: #fafafa;
+  background: #1a1e36;
+  background-image:
+          url(media/SmartCity.jpg);
   color: #333333;
+  height: 100%;
+  background-repeat: no-repeat;
+  /*background-size: cover;*/
   margin-top: 5rem;
 }
 
@@ -13,7 +18,7 @@ ul {
 }
 
 .bg-steel {
-  background-color: #5f788a;
+  background-color: #394657;
 }
 
 .site-header .navbar-nav .nav-link {
@@ -29,9 +34,10 @@ ul {
 }
 
 .content-section {
-  background: #ffffff;
+  background: #dadaee;
+  opacity: 0.95;
   padding: 10px 20px;
-  border: 1px solid #dddddd;
+  border: 1px solid #dadaee;
   border-radius: 3px;
   margin-bottom: 20px;
 }
@@ -81,4 +87,8 @@ a.article-title:hover {
 
 .account-heading {
   font-size: 2.5rem;
+}
+
+.asteriskField {
+    display: none;
 }

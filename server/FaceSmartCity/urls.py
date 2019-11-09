@@ -29,7 +29,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     re_path(r'^delete_stream/(?P<source>.+)/$', user_views.delete_stream, name='delete-stream'),
-    # re_path(r'^run_stream/(?P<source>.+)/$', user_views.run_stream, name='run-stream'),
+    # re_path(r'^add_stream/(?P<source>.+)/$', user_views.add_stream, name='add-stream'),
     path('', include('webface.urls')),
 ]
 

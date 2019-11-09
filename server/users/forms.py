@@ -32,3 +32,6 @@ class SourceAddForm(forms.ModelForm):
     class Meta:
         model = StreamSource
         fields = ['camera_source']
+        widgets = {
+            'camera_source': forms.TextInput(attrs={'placeholder': 'Camera source'}),
+        }

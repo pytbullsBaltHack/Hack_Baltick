@@ -47,23 +47,22 @@ def profile(request):
 def streams(request):
     if request.method == 'POST':
         s_form = SourceAddForm(request.POST)
-        # txt = request.POST['new-source']
-        # s_form = SourceAddForm(initial={'camera_source': txt})
-        # messages.success(request, f'{txt}')
-        # s_form.camera_source = txt
-        # messages.success(request, f'{s_form.errors}')
+        # has_streams = StreamSource.objects.\
+        #     filter(user=request.user, camera_source=s_form['camera_source']).first()
+        # if has_streams is None:
         if s_form.is_valid():
-            # messages.success(request, f'33333')
             stream_source = s_form.save(commit=False)
             stream_source.user = request.user
             stream_source.save()
             messages.success(request, f'Your source has been added!')
             return redirect('streams')
         else:
-            messages.success(request, f'Form is invalid')
+            messages.warning(request, f'Form is invalid!')
+        # else:
+        #     messages.warning(request, f'You already have this source!')
 
     else:
-        s_form = SourceAddForm()
+        s_form = SourceAddForm(initial={'camera_source': ''})
 
     str_src = StreamSource.objects.filter(user=request.user).all()
     context = {
@@ -72,6 +71,24 @@ def streams(request):
     }
 
     return render(request, 'users/streams.html', context)
+
+
+# @login_required
+# def add_stream(request):
+#     source = request.GET['source']
+#     new_source = StreamSource(user=request.user, camera_source=source)
+#     new_source.save()
+#     messages.success(request, 'Your source has been added!')
+#
+#     return redirect('streams')
+#
+#
+# @login_required
+# def change_stream(request, source):
+#     stream = StreamSource.objects.filter(user=request.user, camera_source=source).first()
+#     # messages.warning(request, 'Your source has been deleted!!!')
+#
+#     return redirect('streams')
 
 
 @login_required
