@@ -26,7 +26,7 @@ class DetectorFace(object):
     frame = 0
     mtcnn = False
     
-    def __init__(self):
+    def __init__(self,params):
         self.frame = 0
         self.mtcnn = MTCNN()
         
@@ -49,6 +49,5 @@ class DetectorFace(object):
         boxes, _ = self.mtcnn.detect(self.opencvtopil(frame))
         for b in boxes:
             rects.append(FaceRect(int(b[0]), int(b[1]), int(b[2] - b[0]), int(b[3] - b[1]), 0))
-       # print(boxes)
-        
+
         return rects

@@ -17,7 +17,7 @@ class FaceRect(object):
 class DetectorFace(object):
     frame = 0
     
-    def __init__(self):
+    def __init__(self,params):
         self.frame = 0
         
         # Инициализация детектора...

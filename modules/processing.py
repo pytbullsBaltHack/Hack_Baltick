@@ -8,24 +8,20 @@ from modules.debug import debugFrame
 from modules.idbase import FaceIdBase
 from modules.statistics import Statistic
 
-
-#from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
+from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
 #from modules.test.detectorid_facenet import DetectorId, FaceId
 from modules.detector_id.DetectoID import DetectorId, FaceId
-from modules.Detector_Face.Detector_Face import DetectorFace
-
-
-
-
-
+#from modules.Detector_Face.Detector_Face import DetectorFace
 
 class Processing(object):
     facedetector = False
     iddetector = False
     idbase = False
     statistics = Statistic
+    frameid = 0
     
     def __init__(self):
+        self.frameid = 0
         self.facedetector = DetectorFace({})
         self.iddetector = DetectorId({})
         self.idbase = FaceIdBase()
@@ -69,6 +65,7 @@ class Processing(object):
         
     def processFrame(self,frame):
         all = self.detectAll(frame)
+        self.frameid = self.frameid + 1
         
         count = len(all)
         if(count > 0):
@@ -102,6 +99,10 @@ class Processing(object):
         color = (0, 255, 0)
         text = "{0}".format(self.statistic.count)
         cv2.putText(drawframe, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+        
+        color = (255, 0, 0)
+        text = "{0}".format(self.frameid)
+        cv2.putText(drawframe, text, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
         
         debugFrame(drawframe)
         
