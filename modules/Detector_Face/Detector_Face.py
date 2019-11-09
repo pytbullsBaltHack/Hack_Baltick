@@ -19,6 +19,9 @@ class FaceRect(object):
         self.w = w
         self.h = h
 
+    def rect(self):
+        return (self.x,self.y,self.w,self.h)
+        
 
 class DetectorFace:
 

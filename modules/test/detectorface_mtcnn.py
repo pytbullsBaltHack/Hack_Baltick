@@ -40,6 +40,9 @@ class DetectorFace(object):
         mat = cv2.cvtColor(mat, cv2.COLOR_BGR2RGB)
         return Image.fromarray(mat)
     
+    def __call__(self, frame):
+        return self.predict(frame)
+        
     # frame: cv2::Mat
     def predict(self,frame):
         rects = []
