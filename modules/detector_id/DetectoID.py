@@ -23,5 +23,7 @@ class DetectorId(object):
 
     # frame: cv2::Mat
     def predict(self, frame, rois):
-        ids = [[1, 2, 3]]
+        ids = list()
+        id = FaceId([i for i in range(50)])
+        ids.append(id)
         return ids
