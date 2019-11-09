@@ -25,7 +25,7 @@ class FaceId(object):
 class DetectorId(object):
     index = 0
     
-    def __init__(self):
+    def __init__(self,param):
         self.index = 0
         # Инициализация детектора...
         return

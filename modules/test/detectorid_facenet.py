@@ -38,7 +38,7 @@ class DetectorId(object):
     resnet = False
     mtcnn = False
     
-    def __init__(self):
+    def __init__(self,param):
         self.index = 0
         
         self.mtcnn = MTCNN(image_size=160)
@@ -68,7 +68,9 @@ class DetectorId(object):
         for roi in rois:
             print("Size: {0}x{1}".format(roi.w,roi.h))
             if((roi.w > 39)&(roi.h > 39)):
-                ROI = self.opencvtopil(frame[roi.y:roi.y+roi.h, roi.x:roi.x+roi.w]); 
+                roicv = frame[roi.y:roi.y+roi.h, roi.x:roi.x+roi.w]
+                # cv2.imwrite("C:\Projects\BalticSea\repo2\Hack_Baltick\test.jpg",roicv)
+                ROI = self.opencvtopil(roicv); 
                 cropped = self.mtcnn(ROI)
             
                 id = self.resnet(cropped.unsqueeze(0))

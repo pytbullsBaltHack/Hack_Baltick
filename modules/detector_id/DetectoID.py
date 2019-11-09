@@ -20,6 +20,14 @@ class FaceId(object):
         self.id = id
         return
 
+    # Расчёт расстояния между двумя векторами FaceId
+    def calcDistance(self,id):
+        sum = 0
+        for i in (0, len(id.id) - 1):
+            sum = sum + math.pow(id.id[i] - self.id[i], 2)
+        return math.sqrt(sum)
+    def valid(self):
+        return len(self.id) > 10;
 
 class DetectorId(object):
 

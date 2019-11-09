@@ -1,5 +1,6 @@
 import cv2
 import numpy
+import sqlite3
 
 class FaceIdBase(object):
     # список id
