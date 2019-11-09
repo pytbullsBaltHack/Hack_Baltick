@@ -28,7 +28,7 @@ class Visitor(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     face_id = models.CharField(max_length=5000, default='')
     date = models.DateTimeField(default=timezone.now)
-    fake_user_id = models.CharField(max_length=5000, default='')
+    real_user_id = models.CharField(max_length=5000, default='')
     event = models.IntegerField(default=0)
 
     def __str__(self):
