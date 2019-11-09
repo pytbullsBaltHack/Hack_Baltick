@@ -1,10 +1,9 @@
 from facenet_pytorch import MTCNN, InceptionResnetV1
 import torch
-from torch.utils.data import DataLoader
-from torchvision import datasets
-import numpy as np
-import pandas as pd
+import cv2
 import os
+from PIL import Image, ImageDraw
+import random
 
 workers = 0 if os.name == 'nt' else 4
 
@@ -26,20 +25,38 @@ class DetectorId(object):
 
     def __init__(self, param):
         self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-        self.model = InceptionResnetV1(pretrained='vggface2').eval().to(self.device)
+        self.mtcnn = MTCNN(image_size=160)
+        self.resnet = InceptionResnetV1(pretrained='vggface2').eval().to(self.device)
 
-    def prepare_data(self, frame, rois):
-        return frame
+    def opencv_to_pil(self, mat):
+        mat = cv2.cvtColor(mat, cv2.COLOR_BGR2RGB)
+        return Image.fromarray(mat)
 
-    def post_data(self, embeddings):
-        faseId = FaceId(embeddings)
-        ids = list()
-        ids.append(faseId)
-        return ids
+    def generate_randId(self):
+        id = []
+        for i in (0, 49):
+            id.append(random.randint(0, 1000) / 1000.0)
+        return FaceId(id)
+
+    def generate_id(self, id):
+        fid = FaceId(0)
+        fid.load('config/data/{0}.npy'.format(id))
+
+        return fid
 
     # frame: cv2::Mat
     def predict(self, frame, rois):
-        aligned = self.prepare_data(frame, rois)
-        embeddings = self.model(aligned).detach().cpu()
-        ids = self.post_data(embeddings)
+        ids = []
+
+        for roi in rois:
+            print("Size: {0}x{1}".format(roi.w, roi.h))
+            if (roi.w > 39) & (roi.h > 39):
+                ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w]);
+                cropped = self.mtcnn(ROI)
+
+                id = self.resnet(cropped.unsqueeze(0))
+                print(id)
+            else:
+                id = []
+            ids.append(FaceId(id))
         return ids
