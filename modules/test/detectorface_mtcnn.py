@@ -1,3 +1,8 @@
+import cv2
+from facenet_pytorch import MTCNN
+from PIL import Image, ImageDraw
+
+# https://github.com/timesler/facenet-pytorch/blob/master/examples/face_tracking.ipynb
 
 class FaceRect(object):
     x = 0
@@ -14,11 +19,16 @@ class FaceRect(object):
         self.id = id
         return
         
+    def rect(self):
+        return (self.x,self.y,self.w,self.h)
+        
 class DetectorFace(object):
     frame = 0
+    mtcnn = False
     
     def __init__(self):
         self.frame = 0
+        self.mtcnn = MTCNN()
         
         # Инициализация детектора...
         return
@@ -26,21 +36,19 @@ class DetectorFace(object):
     def isInRange(self,ffrom,fto):
         return ((self.frame >= ffrom) & (self.frame <= fto))
     
+    def opencvtopil(self,mat):
+        mat = cv2.cvtColor(mat, cv2.COLOR_BGR2RGB)
+        return Image.fromarray(mat)
+    
     def __call__(self, frame):
         return self.predict(frame)
         
     # frame: cv2::Mat
     def predict(self,frame):
         rects = []
-        
-        if self.isInRange(1,30): rects.append(FaceRect(120, 200, 40, 40, 1))
-        if self.isInRange(20,50):rects.append(FaceRect(10, 140, 60, 80, 2))
-        if self.isInRange(40,80):rects.append(FaceRect(210, 10, 250, 180, 3))
-        if self.isInRange(88,98): rects.append(FaceRect(120, 200, 40, 40, 1))
-        
-        if self.isInRange(120,190): rects.append(FaceRect(120+self.frame-120, 200, 40, 40, 4))
-        
-        if self.isInRange(210,280): rects.append(FaceRect(10, 120+self.frame-210, 60, 70, 5))
-        self.frame = self.frame + 1
+        boxes, _ = self.mtcnn.detect(self.opencvtopil(frame))
+        for b in boxes:
+            rects.append(FaceRect(int(b[0]), int(b[1]), int(b[2] - b[0]), int(b[3] - b[1]), 0))
+       # print(boxes)
         
         return rects

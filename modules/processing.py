@@ -2,21 +2,39 @@ import cv2
 import numpy
 import math
 
-from modules.debug import debugFrame
+# https://github.com/ageitgey/face_recognition/issues/43
 
-from modules.test.detectorface import DetectorFace, FaceRect
-from modules.test.detectorid import DetectorId, FaceId
+from modules.debug import debugFrame
+from modules.idbase import FaceIdBase
+from modules.statistics import Statistic
+
+<<<<<<< HEAD
+# from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
+#from modules.test.detectorid_facenet import DetectorId, FaceId
+from modules.detector_id.DetectoID import DetectorId, FaceId
+from modules.Detector_Face.Detector_Face import DetectorFace, FaceRect
+=======
+#from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
+#from modules.test.detectorid_facenet import DetectorId, FaceId
+from modules.detector_id.DetectoID import DetectorId, FaceId
+from modules.Detector_Face.Detector_Face import DetectorId, FaceId
+>>>>>>> 84d50068866ff3120541edd3ec3b15bd4f544b2b
 
 class Processing(object):
     facedetector = False
     iddetector = False
+    idbase = False
+    statistics = Statistic
     
     def __init__(self):
         self.facedetector = DetectorFace()
-        self.iddetector = DetectorId()
+        self.iddetector = DetectorId({})
+        self.idbase = FaceIdBase()
+        self.statistic = Statistic()
         
         return
         
+    # Генерируем случайные файлы с ID 
     def initrandomfaceid(self):
         for i in range(0, 10):
             id = self.iddetector.generateRandId()
@@ -26,18 +44,68 @@ class Processing(object):
     # Находим лица на кадре и возвращаем их список
     # Трекер тоже встроим сюда
     def detectFaces(self,frame):
-        return self.facedetector.predict(frame)
+        return self.facedetector(frame)
 
+    # Определяем ID для всех лиц
     def detectId(self,frame,rects):
         return self.iddetector.predict(frame,rects)
 
-    # Расчёт расстояния между двумя векторами FaceId
-    def calcDistance(self,ida,idb):
-        sum = 0
-        for i in (0, len(ida.id) - 1):
-            sum = sum + math.pow(ida.id[i] - idb.id[i], 2)
-        return math.sqrt(sum)
+    # Находим лица и определяем их ID:
+    # возвращаем список объектов {"rect" : rect, "id": id}
+    def detectAll(self,frame):
+        faces = self.detectFaces(frame)
+        ids = self.detectId(frame, faces)
+        
+        all = []
+        count = len(faces)
+        if(count > 0):
+            for i in (0, count - 1):
+                rect = faces[i]
+                id = ids[i]
+            
+                # todo add mat roi
+                all.append({"rect" : rect, "id": id})
+        
+        return all
+        
+    def processFrame(self,frame):
+        all = self.detectAll(frame)
+        
+        count = len(all)
+        if(count > 0):
+            for i in (0, count - 1):
+                f = all[i]["rect"]
+                id = all[i]["id"]
+            
+                if(id.valid()):
+                    print("valid vector: {0}\n".format(len(id.id)))
+                    isnew = self.idbase.checkid(id)
+                    if(isnew):
+                        self.idbase.addtobase(id)
+                        self.statistic.increment()
+                
+        self.debugStatisticModule(frame,all)
+        return
 
+    def debugStatisticModule(self, frame, all):
+        drawframe = frame.copy()
+        
+        count = len(all)
+        if(count > 0):
+            for i in (0, count - 1):
+                f = all[i]["rect"]
+                color = (0, 255, 0)
+                text = "{0}".format(f.id)
+                cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+                cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
+                
+        
+        color = (0, 255, 0)
+        text = "{0}".format(self.statistic.count)
+        cv2.putText(drawframe, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+        
+        debugFrame(drawframe)
+        
     # Тестируем детектор -- он покажет окно с найденными объектами
     def debugDetector(self,frame):
         faces = self.detectFaces(frame)
@@ -50,28 +118,32 @@ class Processing(object):
         
     # Тестируем детектор -- он покажет окно с найденными объектами и расстоянием до заданного id
     def debugDetectorId(self,frame,bid):
-        faces = self.detectFaces(frame)
-        ids = self.detectId(frame, faces)
+        all = self.detectAll(frame)
         
         baseid = self.iddetector.generateId(bid)
         
         drawframe = frame.copy()
-        for i in (0, len(faces) - 1):
-            f = faces[i]
-            id = ids[i]
-            dist = self.calcDistance(baseid, id)
-            
-            if(dist < 0.2):
-                color = (0, 255, 0)
-            elif (dist < 0.4):
-                color = (0, 255, 255)
-            else:
-                color = (0, 0, 255)
-            
-            cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
-            
-            text = "{0}".format(dist)
-            cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
-            
+        count = len(all)
+        if(count > 0):
+            for i in (0, count - 1):
+                f = all[i]["rect"]
+                id = all[i]["id"]
+                if(id.valid()):
+                    dist = baseid.calcDistance(id)
+                    
+                    if(dist < 0.2):
+                        color = (0, 255, 0)
+                    elif (dist < 0.4):
+                        color = (0, 255, 255)
+                    else:
+                        color = (0, 0, 255)
+                else:
+                    color = (255, 0, 0)
+                    
+                cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
+                
+                text = "{0:.2f}".format(dist)
+                cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+                
         debugFrame(drawframe)
         
