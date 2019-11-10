@@ -6,6 +6,8 @@ import math
 from PIL import Image, ImageDraw
 import random
 import numpy as np
+# from scipy.spatial import distance
+from fastdtw import fastdtw
 
 workers = 0 if os.name == 'nt' else 4
 
@@ -27,11 +29,24 @@ class FaceId(object):
 
     # Расчёт расстояния между двумя векторами FaceId
     def calcDistance(self,id):
-        sum = 0
-        for i in (0, len(id.id) - 1):
-            sum = sum + math.pow(id.id[i] - self.id[i], 2)
-            
-        return math.sqrt(sum)
+        mas_id_1 = id.id
+        mas_id_2 = self.id
+        # mas_id_1 = id.id.detach().cpu()
+        # mas_id_2 = self.id.detach().cpu()
+        # distance, path = fastdtw(mas_id_1, mas_id_2)
+        # return distance
+        dist = (mas_id_1 - mas_id_2) ** 2
+        dist = dist.sum()
+        dist = pow(dist, 0.5)
+        # dists = [[(e1 - e2).norm().item() for e2 in mas_id_1] for e1 in mas_id_2]
+
+        return dist
+
+        # sum = 0
+        # for i in (0, len(id.id) - 1):
+        #     sum = sum + math.pow(id.id[i] - self.id[i], 2)
+        #
+        # return math.sqrt(sum)
     
     def valid(self):
         return len(self.id) > 10;
