@@ -27,7 +27,7 @@ class Processing(object):
         self.iddetector = DetectorId({})
         self.idbase = FaceIdBase()
         self.statistic = Statistic()
-        self.cache = cfg.cache == 1
+        self.cache = cfg.cache
         
         if(self.cache):
             print("Using cache!")
