@@ -77,7 +77,7 @@ class DetectorFace:
             # plot_one_box(xyxy, frame, label='face', color=[0,0,0])
             w = xyxy[2]-xyxy[0]
             h = xyxy[3]-xyxy[1]
-            if w/h>0.6:
+            if (w/h>0.6) & (xyxy[1] > 20):
                 rects.append(FaceRect(xyxy[0],xyxy[1],w, h))
         # return rects, frame
         return rects

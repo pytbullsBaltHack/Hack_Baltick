@@ -134,14 +134,18 @@ class Processing(object):
                 f = all[i]["rect"]
                 id = all[i]["id"]
                 if((f.w > 69) & (f.h > 69)):
-                
-                    color = (0, 255, 255) if (id.registered) else (0, 255, 0)
-                    cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color, 2)
-                    
-                    if(id.uid is not None):
+
+                    if (id.uid is not None):
+                        color = (0, 255, 255) if (id.registered) else (0, 255, 0)
+                        cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color, 2)
+
                         #text = "{0}".format(self.idbase.getUserName(id.uid), id.uid)
                         text = "OLD" if id.registered else "NEW" 
-                        cv2.putText(drawframe, text, (f.x, f.y - 2), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+                        cv2.putText(drawframe, text, (f.x, f.y - 5), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+                    else:
+                        color = (128, 128, 128)
+                        cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color, 2)
+
             
         color = (0, 255, 0)
         text = "{0}".format(self.statistic.count)

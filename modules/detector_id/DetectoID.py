@@ -86,7 +86,7 @@ class DetectorId(object):
             # print("Size: {0}x{1} {2},{3}".format(roi.w, roi.h, roi.x, roi.y))
             # print('Relation wh: ', (roi.w / roi.h))
 
-            if (roi.w > 69) & (roi.h > 69):
+            if (roi.w > 99) & (roi.h >99):
                 ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w]);
 
                 if torch.cuda.is_available():

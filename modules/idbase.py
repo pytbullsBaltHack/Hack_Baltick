@@ -48,7 +48,7 @@ class FaceIdBase(object):
         self.idlist = []
         self.visitors = []
         self.database = Database("server/db.sqlite3")
-        self.similardist = 0.7
+        self.similardist = 1
         self.loadusers()
         return 
    
