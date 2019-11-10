@@ -56,14 +56,14 @@
                     <div>
                         <tr>
                             <th scope="col">Sources</th>
-                            <th></th>
-                            <th></th>
+                            <th>Event Id</th>
                             <th></th>
                         </tr>
                         {% for src in sources %}
                             {% if src.user == user %}
                                 <tr>
                                     <td>{{ src.camera_source }}</td>
+                                    <td>{{ src.event_id }}</td>
                                     <td>
                                         <a class="btn btn-outline-danger mb-2" href="{% url 'delete-stream' source=src.camera_source %}">Delete</a>
                                     </td>

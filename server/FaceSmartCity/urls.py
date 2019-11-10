@@ -31,7 +31,7 @@ urlpatterns = [
     re_path(r'^events/(?P<ev_id>(.+))/$', user_views.events, name='events'),
     re_path(r'^events2/(?P<ev_id>(.+))/(?P<is_review>(.+))/$', user_views.events2, name='events2'),
     re_path(r'^choose_event/(?P<ev_id>.+)/$', user_views.choose_event, name='choose-event'),
-    re_path(r'^review_event/(?P<ev_id>.+)/$', user_views.review_event, name='review-event'),
+    re_path(r'^overview_event/(?P<ev_id>.+)/$', user_views.overview_event, name='overview-event'),
     re_path(r'^delete_stream/(?P<source>.+)/$', user_views.delete_stream, name='delete-stream'),
     # re_path(r'^add_stream/(?P<source>.+)/$', user_views.add_stream, name='add-stream'),
     path('', include('webface.urls')),

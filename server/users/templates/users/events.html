@@ -19,10 +19,13 @@
                             <tr>
                                 <td>{{ ev.name }}</td>
                                 <td>
-                                    <a class="btn btn-outline-danger mb-2" href="{% url 'review-event' ev_id=ev.id %}">Review</a>
+                                    <small class="text-muted">Event Id: {{ ev.pk }}</small>
                                 </td>
                                 <td>
-                                    <a class="btn btn-outline-danger mb-2" href="{% url 'choose-event' ev_id=ev.id %}">Detail</a>
+                                    <a class="btn btn-outline-info mb-2" href="{% url 'overview-event' ev_id=ev.id %}">Overview</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-info mb-2" href="{% url 'choose-event' ev_id=ev.id %}">Detail</a>
                                 </td>
                             </tr>
                         {% endif %}
@@ -35,13 +38,12 @@
         {% if visitors|length > 0 %}
             <article class="media content-section">
                 <div class="media-body">
-                    <table class="table">
+                    <table id="data_table" class="table" onload="refFunc1 = setInterval(refresher, 500)">
                         <div>
                             <tr>
-                                <th scope="col">Visitors</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
+                                <th scope="col">Visitors Id</th>
+                                <th>Time</th>
+                                <th>Information</th>
                             </tr>
                             {% for v, f in visitors %}
                                 {% if v.user == user %}
@@ -52,7 +54,9 @@
                                         </td>
                                         <td>
                                             {% if f != None %}
-                                                {{ f.name }}
+                                                <p class="text-success">{{ f.name }}</p>
+                                            {% else %}
+                                                <p class="text-danger">Unknown</p>
                                             {% endif %}
                                         </td>
                                     </tr>
@@ -60,6 +64,19 @@
                             {% endfor %}
                         </div>
                     </table>
+                    <script>
+                    function refresher() {
+                        let table = document.getElementById("data_table");
+                        table.refresh ();
+                        alert("refreshed")
+                    }
+                    </script>
+                </div>
+            </article>
+        {% else %}
+            <article class="media content-section">
+                <div class="media-body">
+                    <a class="mr-2">There are no visitors yet!</a>
                 </div>
             </article>
         {% endif %}
@@ -67,7 +84,7 @@
         {% if visitors_num != None %}
             <article class="media content-section">
                 <div class="media-body">
-                    <table class="table">
+                    <table id="data_table" class="table" onload="refFunc2 = setInterval(refresher, 500)">
                         <div>
                             <tr>
                                 <th scope="col">Review</th>
@@ -85,6 +102,13 @@
                             </tr>
                         </div>
                     </table>
+                    <script>
+                    function refresher() {
+                        let table = document.getElementById("data_table");
+                        table.refresh ();
+                        alert("refreshed")
+                    }
+                    </script>
                 </div>
             </article>
         {% endif %}

@@ -175,5 +175,5 @@ def choose_event(request, ev_id):
 
 
 @login_required
-def review_event(request, ev_id):
+def overview_event(request, ev_id):
     return redirect('events2', ev_id=ev_id, is_review=1)
