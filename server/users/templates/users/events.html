@@ -1,0 +1,92 @@
+{% extends "webface/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <article class="media content-section">
+        <div class="media-body">
+            <div class="article-metadata">
+                <a class="mr-2" href="#">Username: {{ user }}</a>
+            </div>
+            <table class="table">
+                <div>
+                    <tr>
+                        <th scope="col">Events</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    {% for ev in events %}
+                        {% if ev.user == user %}
+                            <tr>
+                                <td>{{ ev.name }}</td>
+                                <td>
+                                    <a class="btn btn-outline-danger mb-2" href="{% url 'review-event' ev_id=ev.id %}">Review</a>
+                                </td>
+                                <td>
+                                    <a class="btn btn-outline-danger mb-2" href="{% url 'choose-event' ev_id=ev.id %}">Detail</a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </table>
+        </div>
+    </article>
+    {% if is_review == 0 %}
+        {% if visitors|length > 0 %}
+            <article class="media content-section">
+                <div class="media-body">
+                    <table class="table">
+                        <div>
+                            <tr>
+                                <th scope="col">Visitors</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            {% for v, f in visitors %}
+                                {% if v.user == user %}
+                                    <tr>
+                                        <td>{{ v.pk }}</td>
+                                        <td>
+                                            <small class="text-muted">{{ v.date|date:"D d M Y" }} {{ v.date|time:"H:i:s" }}</small>
+                                        </td>
+                                        <td>
+                                            {% if f != None %}
+                                                {{ f.name }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </table>
+                </div>
+            </article>
+        {% endif %}
+    {% else %}
+        {% if visitors_num != None %}
+            <article class="media content-section">
+                <div class="media-body">
+                    <table class="table">
+                        <div>
+                            <tr>
+                                <th scope="col">Review</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <td>Visitors Number: </td>
+                                <td>{{ visitors_num }}</td>
+                            </tr>
+                            <tr>
+                                <td>Known Visitors Number:</td>
+                                <td>{{ known_num }}</td>
+                            </tr>
+                        </div>
+                    </table>
+                </div>
+            </article>
+        {% endif %}
+    {% endif %}
+{% endblock content %}
