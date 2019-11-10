@@ -16,9 +16,11 @@ workers = 0 if os.name == 'nt' else 4
 
 class FaceId(object):
     id = []
-
+    uid = None
+    
     def __init__(self, id):
         self.id = id
+        self.uid = None
         return
 
     # Расчёт расстояния между двумя векторами FaceId
@@ -33,6 +35,7 @@ class FaceId(object):
         stra  = ["{0:0.6}".format(float(x)) for x in self.id]
         ret = ','.join(stra)
         return ret
+        
 class DetectorId(object):
 
     def __init__(self, param):
@@ -62,7 +65,7 @@ class DetectorId(object):
         ids = []
 
         for roi in rois:
-            print("Size: {0}x{1} {2},{3}".format(roi.w, roi.h, roi.x, roi.y))
+            # print("Size: {0}x{1} {2},{3}".format(roi.w, roi.h, roi.x, roi.y))
             if (roi.w > 39) & (roi.h > 39):
                 ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w]);
 

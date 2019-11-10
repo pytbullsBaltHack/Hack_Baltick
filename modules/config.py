@@ -5,12 +5,14 @@ import configparser
 
 class AppConfig(object):
     filename = ""
+    cache = 0
     
     facedet = {}
 
     # The class "constructor" - It's actually an initializer 
     def __init__(self):
         self.filename = ""
+        self.cache = 0
         self.facedet = {}
 
 
@@ -37,6 +39,7 @@ def getConfig():
     
     if(config.has_section('test')): 
         c.filename = config['test']['filename'];
+        c.cache = int(config['test']['cache']);
         
     else:
         print('Invalid config: {0} \n',format(configfn))

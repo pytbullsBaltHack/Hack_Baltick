@@ -32,22 +32,24 @@ class Database(object):
     def GetUserList(self):
         q = "SELECT id as id, face_id as face_id, name as name FROM webface_userface"
     
-        print(q)
-        return []
+       # print(q)
+        return self.queryAll(q)
         
     # Отправить задетектенного пользователя
     def PushUserId(self,userid):
-        q = "INSERT INTO webface_userface (face_id,img,name) VALUES('{0}','','')".format(userid.tostring())
-        #self.query(q)
+        q = "INSERT INTO webface_userface (face_id,img,name,user_id) VALUES('{0}','','',1)".format(userid.tostring())
+        dbid = 0
+        # dbid = self.query(q)
         
-        return
+        #  print(q)
+        
+        return dbid
     
     # Отправить задетектенного пользователя
     def PushVisitor(self,userid,id,event):
-        q = "INSERT INTO webface_visitor (face_id,date,user_id,event) VALUES('{0}',DATETIME('now'),{1},{2})".format(userid.tostring(),id,event)
-        self.query(q)
+        q = "INSERT INTO webface_visitor (face_id,date,user_id,real_user_id,event_id) VALUES('{0}',DATETIME('now'),1,{1},{2})".format(userid.tostring(),id,event)
+        dbid = 0
+        # dbid = self.query(q)
         
-        print(q)
-        
-        return
+        return dbid
     

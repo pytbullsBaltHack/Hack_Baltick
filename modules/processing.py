@@ -27,7 +27,10 @@ class Processing(object):
         self.iddetector = DetectorId({})
         self.idbase = FaceIdBase()
         self.statistic = Statistic()
+        self.cache = cfg.cache == 1
         
+        if(self.cache):
+            print("Using cache!")
         return
         
     # Генерируем случайные файлы с ID 
@@ -91,7 +94,7 @@ class Processing(object):
                 id = all[i]["id"]
             
                 if(id.valid()):
-                    print("valid vector: {0}\n".format(len(id.id)))
+                   # print("valid vector: {0}\n".format(len(id.id)))
                     isnew = self.idbase.checkid(id)
                     if(isnew):
                         self.idbase.addtobase(id)
@@ -107,11 +110,13 @@ class Processing(object):
         if(count > 0):
             for i in (0, count - 1):
                 f = all[i]["rect"]
-                color = (0, 255, 0)
-                text = "{0}".format(f.id)
-                cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+                id = all[i]["id"]
+                color = (0, 255, 0) if ((f.w > 39) & (f.h > 39)) else (0, 0, 255)
                 cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
                 
+                if(id.uid is not None):
+                    text = "{0}".format(id.uid)
+                    cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
         
         color = (0, 255, 0)
         text = "{0}".format(self.statistic.count)
@@ -122,6 +127,7 @@ class Processing(object):
         cv2.putText(drawframe, text, (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
         
         debugFrame(drawframe)
+        
         
     # Тестируем детектор -- он покажет окно с найденными объектами
     def debugDetector(self,frame):
