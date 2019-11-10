@@ -9,6 +9,7 @@ import torch
 from modules.debug import debugFrame
 from modules.idbase import FaceIdBase
 from modules.statistics import Statistic
+from modules.userlist import UserList
 
 from modules.detector_id.DetectoID import DetectorId, FaceId
 #from modules.test.detectorid_facenet import DetectorId, FaceId
@@ -19,11 +20,13 @@ class Processing(object):
     facedetector = False
     iddetector = False
     idbase = False
+    userlist = False
     statistics = Statistic
     frameid = 0
     
     def __init__(self,cfg):
         self.frameid = 0
+        self.userlist = UserList()
         self.facedetector = DetectorFace(cfg.facedet)
         self.iddetector = DetectorId({})
         self.idbase = FaceIdBase()
@@ -102,13 +105,15 @@ class Processing(object):
                     if(uuid is None):
                         #print("frame {0} ".format(self.frameid))
                         uuid = self.idbase.addtobase(id)
-                    
+                        
                     new = self.idbase.checkvisitor(id)
                     if(new):
                         #print("new")
                         self.statistic.increment()
                         self.idbase.addvisitor(id,uuid)
+                        self.userlist.addvisitor(uuid,self.frameid)
                         
+                    all[i]["id"].registered = self.userlist.checkvisitor(uuid,self.frameid);
                     if(uuid > 0):
                         all[i]["id"].uid = uuid
                 
@@ -123,13 +128,15 @@ class Processing(object):
             for i in (0, count - 1):
                 f = all[i]["rect"]
                 id = all[i]["id"]
-                color = (0, 255, 0) if ((f.w > 69) & (f.h > 69)) else (0, 0, 255)
-                cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
+                if((f.w > 69) & (f.h > 69)):
                 
-                if(id.uid is not None):
-                    text = "{0} ({1})".format(self.idbase.getUserName(id.uid), id.uid)
-                    cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
-        
+                    color = (0, 255, 255) if (id.registered) else (0, 255, 0)
+                    cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
+                    
+                    if(id.uid is not None):
+                        text = "{0} ({1})".format(self.idbase.getUserName(id.uid), id.uid)
+                        cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
+            
         color = (0, 255, 0)
         text = "{0}".format(self.statistic.count)
         cv2.putText(drawframe, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)

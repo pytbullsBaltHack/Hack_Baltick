@@ -16,10 +16,12 @@ workers = 0 if os.name == 'nt' else 4
 class FaceId(object):
     id = []
     uid = None
+    registered = False
     
     def __init__(self, id):
         self.id = id
         self.uid = None
+        self.registered = False
         return
 
     # Расчёт расстояния между двумя векторами FaceId
