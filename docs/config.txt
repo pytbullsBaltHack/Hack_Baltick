@@ -1,6 +1,7 @@
 Конфигурация задаётся через файл config.ini из каталога config:
 [test]
 filename=C:\Projects\BalticSea\test2.mp4
+cache=0
 
 [facedet]
 cfg=C:\Projects\BalticSea\data\yolov3-face.cfg

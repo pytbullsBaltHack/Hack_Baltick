@@ -11,8 +11,8 @@ from modules.statistics import Statistic
 
 from modules.detector_id.DetectoID import DetectorId, FaceId
 #from modules.test.detectorid_facenet import DetectorId, FaceId
-from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
-#from modules.Detector_Face.Detector_Face import DetectorFace
+#from modules.test.detectorface_mtcnn import DetectorFace, FaceRect
+from modules.Detector_Face.Detector_Face import DetectorFace
 
 class Processing(object):
     facedetector = False
@@ -63,8 +63,9 @@ class Processing(object):
     # Находим лица и определяем их ID:
     # возвращаем список объектов {"rect" : rect, "id": id}
     def detectAll(self,frame):
-        cached, ret = self.loadCache(self.frameid)
-        if(ret == True): return cached
+        if(self.cache):
+            cached, ret = self.loadCache(self.frameid)
+            if(ret == True): return cached
     
         faces = self.detectFaces(frame)
         ids = self.detectId(frame, faces)
@@ -95,10 +96,13 @@ class Processing(object):
             
                 if(id.valid()):
                    # print("valid vector: {0}\n".format(len(id.id)))
-                    isnew = self.idbase.checkid(id)
-                    if(isnew):
-                        self.idbase.addtobase(id)
+                    uuid = self.idbase.checkid(id)
+                    if(uuid == 0):
+                        uuid = self.idbase.addtobase(id)
                         self.statistic.increment()
+                        
+                    if(uuid > 0):
+                        all[i]["id"].uid = uuid
                 
         self.debugStatisticModule(frame,all)
         return
@@ -115,7 +119,7 @@ class Processing(object):
                 cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
                 
                 if(id.uid is not None):
-                    text = "{0}".format(id.uid)
+                    text = "{0} ({1})".format(self.idbase.getUserName(id.uid), id.uid)
                     cv2.putText(drawframe, text, (f.x + f.w, f.y + f.h), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 1)
         
         color = (0, 255, 0)

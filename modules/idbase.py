@@ -101,29 +101,25 @@ class FaceIdBase(object):
     
     # проверяем ID по базе
     def checkid(self,id):
-        similar = self.getSimilarObjects(id)
-        return len(similar) == 0
+        uid = self.detectuser(id)
+        uiid = (uid.id) if uid is not None else 0
+        
+        return uiid
     
     def getUserName(self,id):
-        for u in users:
+        for u in self.visitors:
             if(u.id == id):
                 return u.name
         return None
         
     # Добавить FaceId в базу   
     def addtobase(self,id):
-        uid = self.detectuser(id)
-        uiid = (uid.id) if uid is not None else 0
-        
-        id.uid = uid
         self.idlist.append(id)
-        
         self.database.PushVisitor(id,uiid,1)
         
-        if(uiid == 0):
-            nuid = self.database.PushUserId(id)
-            self.addnewuser(nuid, id)
-        
+        uuid = self.database.PushUserId(id)
+        self.addnewuser(nuid, id)
+
         print("Add user to base: {0}".format(uiid))
         
         return uiid
