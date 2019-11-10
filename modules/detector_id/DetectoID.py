@@ -13,7 +13,6 @@ workers = 0 if os.name == 'nt' else 4
 @brief Class for calculate ID
 """
 
-
 class FaceId(object):
     id = []
     uid = None
@@ -66,7 +65,7 @@ class DetectorId(object):
 
         for roi in rois:
             # print("Size: {0}x{1} {2},{3}".format(roi.w, roi.h, roi.x, roi.y))
-            if (roi.w > 39) & (roi.h > 39):
+            if (roi.w > 69) & (roi.h > 69):
                 ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w]);
 
                 if torch.cuda.is_available():

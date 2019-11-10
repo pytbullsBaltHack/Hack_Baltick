@@ -2,6 +2,7 @@ import cv2
 import numpy
 import math
 import os
+import torch
 
 # https://github.com/ageitgey/face_recognition/issues/43
 
@@ -56,7 +57,7 @@ class Processing(object):
     def loadCache(self,frameid):
         fn = 'config/cache/{0}.npy'.format(frameid)
         if(os.path.isfile(fn)):
-            return numpy.load(fn, allow_pickle=True), True
+            return numpy.load(fn,allow_pickle=True), True
         else:
             return False, False
 
@@ -79,8 +80,9 @@ class Processing(object):
             
                 # todo add mat roi
                 all.append({"rect" : rect, "id": id})
-        
-        self.saveCache(self.frameid,all)
+               
+        if(self.cache):
+            self.saveCache(self.frameid,all)
     
         return all
         
@@ -95,11 +97,17 @@ class Processing(object):
                 id = all[i]["id"]
             
                 if(id.valid()):
-                   # print("valid vector: {0}\n".format(len(id.id)))
+                    # print("valid vector: {0}\n".format(len(id.id)))
                     uuid = self.idbase.checkid(id)
-                    if(uuid == 0):
+                    if(uuid is None):
+                        #print("frame {0} ".format(self.frameid))
                         uuid = self.idbase.addtobase(id)
+                    
+                    new = self.idbase.checkvisitor(id)
+                    if(new):
+                        #print("new")
                         self.statistic.increment()
+                        self.idbase.addvisitor(id,uuid)
                         
                     if(uuid > 0):
                         all[i]["id"].uid = uuid
@@ -115,7 +123,7 @@ class Processing(object):
             for i in (0, count - 1):
                 f = all[i]["rect"]
                 id = all[i]["id"]
-                color = (0, 255, 0) if ((f.w > 39) & (f.h > 39)) else (0, 0, 255)
+                color = (0, 255, 0) if ((f.w > 69) & (f.h > 69)) else (0, 0, 255)
                 cv2.rectangle(drawframe, (f.x, f.y), (f.x + f.w, f.y + f.h), color)
                 
                 if(id.uid is not None):

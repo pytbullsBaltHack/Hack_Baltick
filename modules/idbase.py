@@ -37,7 +37,7 @@ class FaceIdBase(object):
     
     # лимит расстояния для похожести
     # TODO: брать из конфига
-    similardist = 0.07
+    similardist = 0.1
     
     # TODO: для оптимизации обеспечивать кластеризацию, 
     # т.е. при поиске сохранять результаты о похожести
@@ -60,8 +60,8 @@ class FaceIdBase(object):
             ur = UserRecord()
             ur.parse(u)
             self.visitors.append(ur)
-            print('added user {0}\n'.format(ur.name))
-            print(ur.face_id)
+            #print('added user {0}\n'.format(ur.name))
+            #print(ur.face_id)
         return
     def detectuser(self,id):
         mindist = self.similardist
@@ -72,6 +72,7 @@ class FaceIdBase(object):
             #print(v.face_id.id)
            # print("Dist: {0} to {1}".format(dist,v.id))
             if (dist < mindist):
+                #print("Select user: {0}: {1}".format(v.id,dist))
                 mindist = dist
                 minuser = v
                 
@@ -99,27 +100,36 @@ class FaceIdBase(object):
         
         return ret
     
+    def checkvisitor(self,id):
+        similar = self.getSimilarObjects(id)
+        
+        return len(similar) == 0
+    
     # проверяем ID по базе
     def checkid(self,id):
+        #print("users length: {0}".format(len(self.visitors)))
         uid = self.detectuser(id)
-        uiid = (uid.id) if uid is not None else 0
+        uuid = (uid.id) if uid is not None else None
         
-        return uiid
+        return uuid
     
     def getUserName(self,id):
         for u in self.visitors:
             if(u.id == id):
                 return u.name
-        return None
+        return "Unknown"
+        
+    def addvisitor(self,id,uuid):
+        if(uuid is not None):
+            self.idlist.append(id)
+            self.database.PushVisitor(id,uuid,1)
         
     # Добавить FaceId в базу   
     def addtobase(self,id):
-        self.idlist.append(id)
-        self.database.PushVisitor(id,uiid,1)
-        
         uuid = self.database.PushUserId(id)
-        self.addnewuser(nuid, id)
-
-        print("Add user to base: {0}".format(uiid))
+        self.addnewuser(uuid, id)
+        uuid = 0
         
-        return uiid
+        print("Add user to base: {0}".format(uuid))
+        
+        return uuid
