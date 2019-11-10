@@ -31,7 +31,8 @@ class ProfileUpdateForm(forms.ModelForm):
 class SourceAddForm(forms.ModelForm):
     class Meta:
         model = StreamSource
-        fields = ['camera_source']
+        fields = ['camera_source', 'event_id']
         widgets = {
-            'camera_source': forms.TextInput(attrs={'placeholder': 'Camera source'}),
+            'camera_source': forms.TextInput(attrs={'placeholder': 'Camera Source'}),
+            'event_id': forms.TextInput(attrs={'placeholder': 'Event Id'})
         }

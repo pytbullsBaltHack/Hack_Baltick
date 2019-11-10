@@ -8,7 +8,7 @@ class StreamSource(models.Model):
     camera_source = models.CharField(max_length=100, default='-1')
     date = models.DateTimeField(default=timezone.now)
     is_run = models.IntegerField(default=0)
-    event = models.IntegerField(default=0)
+    event_id = models.IntegerField(default=0)
 
     def __str__(self):
         return self.camera_source
@@ -16,7 +16,7 @@ class StreamSource(models.Model):
 
 class UserFace(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    face_id = models.CharField(max_length=5000, default='')
+    face_id = models.CharField(max_length=10000, default='')
     img = models.CharField(max_length=200, default='')
     name = models.CharField(max_length=100, default='')
 
@@ -26,10 +26,10 @@ class UserFace(models.Model):
 
 class Visitor(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    face_id = models.CharField(max_length=5000, default='')
+    face_id = models.CharField(max_length=10000, default='')
     date = models.DateTimeField(default=timezone.now)
-    real_user_id = models.CharField(max_length=5000, default='')
-    event = models.IntegerField(default=0)
+    real_user_id = models.IntegerField(default=0)
+    event_id = models.IntegerField(default=0)
 
     def __str__(self):
         return self.face_id
