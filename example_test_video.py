@@ -15,7 +15,7 @@ cfg = '/media/vladimir/WORK/Pretrain_Models/YOLOv3_COCO_original/yolov3.cfg'
 weights = '/media/vladimir/WORK/Pretrain_Models/YOLOv3_COCO_original/yolov3.weights'
 classes_names = '/media/vladimir/WORK/Pretrain_Models/YOLOv3_COCO_original/coco.names'
 
-video_file = '/media/vladimir/WORK/data/test2.mp4'
+video_file = '/media/vladimir/WORK/data/20191110_122918.mp4'
 cfg = '/media/vladimir/WORK/Pretrain_Models/YOLO_face/model-weights/cfg/yolov3-face.cfg'
 weights = "/media/vladimir/WORK/Pretrain_Models/YOLO_face/model-weights/yolov3-wider_16000.weights"
 classes_names = '/media/vladimir/WORK/Pretrain_Models/YOLO_face/model-weights/cfg/face.names'

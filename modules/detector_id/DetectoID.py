@@ -67,9 +67,10 @@ class DetectorId(object):
     # frame: cv2::Mat
     def predict(self, frame, rois):
         ids = []
-
         for roi in rois:
             # print("Size: {0}x{1} {2},{3}".format(roi.w, roi.h, roi.x, roi.y))
+            print('Relation wh: ', (roi.w / roi.h))
+
             if (roi.w > 69) & (roi.h > 69):
                 ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w]);
 

@@ -33,13 +33,20 @@ def main():
         print("Error opening video stream or file")
         return
 
+    #Запись видео
+
+    out = cv2.VideoWriter('output.avi', -1, 20.0, (1280, 720))
+
+
     # Читаем всё видео
     while(stream.isOpened()):
         ret, frame = stream.read()
         if ret == True:
             #processing.debugDetectorId(frame, 2)
             processing.processFrame(frame)
-            
+            out.write(frame)
+
+
             # Press Q on keyboard to  exit
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
@@ -47,6 +54,6 @@ def main():
         # Break the loop
         else: 
             break
-    
+
 # Точка входа     
 main()
