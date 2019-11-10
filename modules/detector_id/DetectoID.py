@@ -27,11 +27,16 @@ class FaceId(object):
 
     # Расчёт расстояния между двумя векторами FaceId
     def calcDistance(self,id):
+        print("A")
+        mult = self.id*id.id
         sum = 0
         for i in (0, len(id.id) - 1):
             sum = sum + float(id.id[i] * self.id[i])
+            
+        for i in (0, len(mult) - 1):
+            sum = sum + mult[i]
+            
         return abs(sum)
-
     
     def valid(self):
         return len(self.id) > 10;
@@ -69,7 +74,7 @@ class DetectorId(object):
         ids = []
         for roi in rois:
             # print("Size: {0}x{1} {2},{3}".format(roi.w, roi.h, roi.x, roi.y))
-            print('Relation wh: ', (roi.w / roi.h))
+            # print('Relation wh: ', (roi.w / roi.h))
 
             if (roi.w > 69) & (roi.h > 69):
                 ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w]);

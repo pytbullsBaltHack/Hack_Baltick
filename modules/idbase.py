@@ -14,12 +14,11 @@ class UserRecord(object):
     def parse(self,dbitem):
         self.id = int(dbitem[0])
         
-        fid = numpy.array(eval('[' + dbitem[1] + ']'))
-        tensor = torch.from_numpy(fid)
+        fid = eval('[' + dbitem[1] + ']')
+        tensor = torch.tensor(fid, dtype=torch.float32, requires_grad=True)
         self.face_id = FaceId(tensor)
         self.name = dbitem[2]
         
-        print(self.face_id)
         return
         
     def __init__(self):
@@ -37,7 +36,7 @@ class FaceIdBase(object):
     
     # лимит расстояния для похожести
     # TODO: брать из конфига
-    similardist = 0.1
+    similardist = 0.55
     
     # TODO: для оптимизации обеспечивать кластеризацию, 
     # т.е. при поиске сохранять результаты о похожести
@@ -49,7 +48,7 @@ class FaceIdBase(object):
         self.idlist = []
         self.visitors = []
         self.database = Database("server/db.sqlite3")
-        self.similardist = 0.07
+        self.similardist = 0.55
         self.loadusers()
         return 
    

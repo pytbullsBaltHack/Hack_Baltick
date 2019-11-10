@@ -74,6 +74,8 @@ class Processing(object):
         faces = self.detectFaces(frame)
         ids = self.detectId(frame, faces)
         
+       # print("predicted: {0}".format(self.frameid))
+       # print(ids)
         all = []
         count = len(faces)
         if(count > 0):
@@ -81,6 +83,7 @@ class Processing(object):
                 rect = faces[i]
                 id = ids[i]
             
+                
                 # todo add mat roi
                 all.append({"rect" : rect, "id": id})
                
@@ -99,6 +102,8 @@ class Processing(object):
                 f = all[i]["rect"]
                 id = all[i]["id"]
             
+                #print("Face ID")
+                #print(id)
                 if(id.valid()):
                     # print("valid vector: {0}\n".format(len(id.id)))
                     uuid = self.idbase.checkid(id)
