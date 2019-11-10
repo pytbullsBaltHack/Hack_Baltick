@@ -36,7 +36,7 @@ class FaceIdBase(object):
     
     # лимит расстояния для похожести
     # TODO: брать из конфига
-    similardist = 0.55
+    similardist = 0.07
     
     # TODO: для оптимизации обеспечивать кластеризацию, 
     # т.е. при поиске сохранять результаты о похожести
@@ -48,7 +48,7 @@ class FaceIdBase(object):
         self.idlist = []
         self.visitors = []
         self.database = Database("server/db.sqlite3")
-        self.similardist = 0.55
+        self.similardist = 0.07
         self.loadusers()
         return 
    
