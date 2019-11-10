@@ -12,3 +12,4 @@ modules/Detector_Face/utils/__pycache__
 modules/detector_id/__pycache__
 config/config.ini
 config/cache
+server/db.sqlite3
