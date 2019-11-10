@@ -5,6 +5,7 @@ import os
 import math
 from PIL import Image, ImageDraw
 import random
+import numpy as np
 
 workers = 0 if os.name == 'nt' else 4
 
@@ -28,8 +29,10 @@ class FaceId(object):
     def calcDistance(self,id):
         sum = 0
         for i in (0, len(id.id) - 1):
-            sum = sum + math.pow(id.id[i] - self.id[i], 2)
-        return math.sqrt(sum)
+            sum = sum + float(id.id[i] * self.id[i])
+        return abs(sum)
+
+    
     def valid(self):
         return len(self.id) > 10;
     def tostring(self):

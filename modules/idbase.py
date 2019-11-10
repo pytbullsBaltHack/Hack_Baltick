@@ -70,7 +70,7 @@ class FaceIdBase(object):
             dist = id.calcDistance(v.face_id)
             #print(id.id)
             #print(v.face_id.id)
-           # print("Dist: {0} to {1}".format(dist,v.id))
+            print("Dist: {0} to {1}".format(dist,v.id))
             if (dist < mindist):
                 #print("Select user: {0}: {1}".format(v.id,dist))
                 mindist = dist
@@ -128,7 +128,6 @@ class FaceIdBase(object):
     def addtobase(self,id):
         uuid = self.database.PushUserId(id)
         self.addnewuser(uuid, id)
-        uuid = 0
         
         print("Add user to base: {0}".format(uuid))
         

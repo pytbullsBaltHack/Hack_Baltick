@@ -14,6 +14,7 @@ class Database(object):
         cursor = self.conn.cursor()
         cursor.execute(q)
         self.conn.commit()
+       # print("Lastrow: {0}".format(cursor.lastrowid))
         return  cursor.lastrowid
         
     def querySingle(self,q):
