@@ -27,16 +27,11 @@ class FaceId(object):
 
     # Расчёт расстояния между двумя векторами FaceId
     def calcDistance(self,id):
-        print("A")
-        mult = self.id*id.id
         sum = 0
         for i in (0, len(id.id) - 1):
-            sum = sum + float(id.id[i] * self.id[i])
+            sum = sum + math.pow(id.id[i] - self.id[i], 2)
             
-        for i in (0, len(mult) - 1):
-            sum = sum + mult[i]
-            
-        return abs(sum)
+        return math.sqrt(sum)
     
     def valid(self):
         return len(self.id) > 10;
