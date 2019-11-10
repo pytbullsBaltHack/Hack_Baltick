@@ -69,11 +69,15 @@ class DetectorId(object):
                 ROI = self.opencv_to_pil(frame[roi.y:roi.y + roi.h, roi.x:roi.x + roi.w]);
 
                 if torch.cuda.is_available():
+
                     cropped = self.mtcnn(ROI)
-                    aligned = []
-                    aligned.append(cropped)
-                    temp = torch.stack(aligned).to(self.device)
-                    id = self.resnet(temp).detach().cpu()
+                    if (cropped is not None):
+                        aligned = []
+                        aligned.append(cropped)
+                        temp = torch.stack(aligned).to(self.device)
+                        id = self.resnet(temp).detach().cpu()
+                    else:
+                        id = [[]]
                 else:
                     cropped = self.mtcnn(ROI)
                     if(cropped is not None):
